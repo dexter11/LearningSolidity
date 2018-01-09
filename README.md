@@ -1,1 +1,1 @@
-# Learning Solidity and Smart Contracts 
+# Learning Progress: Solidity and Smart Contracts 
