@@ -1,1 +1,1 @@
-# LearningSolidity
+# Learning Solidity and Smart Contracts 
