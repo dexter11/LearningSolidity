@@ -1,0 +1,65 @@
+pragma solidity ^0.4.0;
+
+contract Erc20Coin{
+    mapping(address => uint) balances;
+    uint supply = 1000;
+    address master;
+    mapping(address => mapping(address => uint)) approved;
+    
+    function Erc20Coin() public{
+        master = msg.sender;
+    }
+    
+    function totalSupply() public constant returns(uint){
+        return supply;
+    }
+    
+    function mint(uint noOfCoins) public{
+        if(msg.sender == master && noOfCoins <= supply){
+            balances[msg.sender] += noOfCoins;
+            supply -= noOfCoins;
+        }
+        else{
+            throw;
+        }
+    }
+    
+    function balanceOf(address tokenOwner) public constant returns (uint balance){
+        return balances[tokenOwner];
+    }
+    
+    function transfer(address to, uint tokens) public returns (bool success){
+        if(balances[msg.sender] >= tokens && tokens > 0){
+            balances[to] += tokens;
+            balances[msg.sender] -= tokens;
+            return true;
+        }
+        return false;
+    }
+    
+    function approve(address spender, uint tokens) public returns (bool success){
+        if(balances[msg.sender] > tokens){
+            approved[msg.sender][spender] = tokens;
+            return true;
+        }
+        return false;
+    }
+    
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining){
+        if(balances[tokenOwner] < approved[tokenOwner][spender]){
+            approved[tokenOwner][spender] = 0;
+            return approved[tokenOwner][spender];
+        }
+        return approved[tokenOwner][spender];
+    }
+    
+    function transferFrom(address from, address to, uint tokens) public returns (bool success){
+        if(balances[from] >= tokens && approved[from][msg.sender] >= tokens && tokens > 0){
+            balances[to] += tokens;
+            balances[from] -= tokens;
+            approved[from][msg.sender] -= tokens;
+            return true;
+        }
+        return false;
+    }
+}
